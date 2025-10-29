@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Lab - Project H</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Speech Lab <span style="color: var(--text-secondary-color); font-size: 1.2rem;">(Project H)</span></h1>
+            <nav class="main-nav">
+                <button class="nav-tab active" data-tab="dashboard">대시보드</button>
+                <button class="nav-tab" data-tab="library">콘텐츠 라이브러리</button>
+                <button class="nav-tab" data-tab="analyzer">'쪼개기' 분석기</button>
+                <button class="nav-tab" data-tab="challenges">챌린지</button>
+            </nav>
+        </header>
+
+        <main>
+            <div id="dashboard-module" class="module active">
+                <h2>나의 성장 대시보드</h2>
+                <div class="dashboard-grid">
+                    <div class="card stat-card">
+                        <h3>Level</h3>
+                        <p class="stat-value" id="level-display">1</p>
+                    </div>
+                    <div class="card stat-card">
+                        <h3>XP (경험치)</h3>
+                        <p class="stat-value" id="xp-display">0</p>
+                        <div class="xp-bar-container">
+                            <div id="xp-bar" class="xp-bar"></div>
+                        </div>
+                        <p class="xp-text" id="xp-text-display">0 / 1000</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Skill Tree (스킬 분석 현황)</h3>
+                    <canvas id="skillTreeChart"></canvas>
+                </div>
+            </div>
+
+            <div id="library-module" class="module">
+                <h2>콘텐츠 라이브러리</h2>
+                <div class="card">
+                    <h3>새 콘텐츠 추가</h3>
+                    <form id="add-content-form">
+                        <div class="form-group">
+                            <label for="content-title">영상 제목</label>
+                            <input type="text" id="content-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content-url">원본 URL</label>
+                            <input type="url" id="content-url" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content-type">유형</label>
+                            <select id="content-type" class="form-control">
+                                <option value="풀 영상">풀 영상</option>
+                                <option value="쇼츠">쇼츠</option>
+                                <option value="강의">강의</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="content-category">카테고리</label>
+                            <select id="content-category" class="form-control">
+                                <option value="논리적 말하기">논리적 말하기</option>
+                                <option value="호감형 말하기">호감형 말하기</option>
+                                <option value="스킬">스킬</option>
+                                <option value="감정">감정</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">라이브러리에 추가 (+10 XP)</button>
+                    </form>
+                </div>
+                <div class="card">
+                    <h3>콘텐츠 목록</h3>
+                    <ul id="content-list" class="list-group">
+                        </ul>
+                </div>
+            </div>
+
+            <div id="analyzer-module" class="module">
+                <h2>'쪼개기' 분석기</h2>
+                <div class="card">
+                    <form id="decon-note-form">
+                        <div class="form-group">
+                            <label for="linked-content">분석할 콘텐츠 선택</label>
+                            <select id="linked-content" class="form-control" required>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="original-script">원본 스크립트</label>
+                            <textarea id="original-script" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="analysis-intent">의도 분석 (Why?)</label>
+                            <input type="text" id="analysis-intent" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="analysis-technique">기법 분석 (How?)</label>
+                            <input type="text" id="analysis-technique" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="analysis-emotion">감정 분석</label>
+                            <input type="text" id="analysis-emotion" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="analysis-keywords">핵심 키워드</label>
+                            <input type="text" id="analysis-keywords" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="my-rewriting">나의 리라이팅</label>
+                            <textarea id="my-rewriting" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group tag-group">
+                            <label>스킬 태그 (Skill Tree 연동)</label><br>
+                            <input type="checkbox" id="tag-logic" name="skill-tag" value="logic"> <label for="tag-logic">논리</label>
+                            <input type="checkbox" id="tag-appeal" name="skill-tag" value="appeal"> <label for="tag-appeal">호감</label>
+                            <input type="checkbox" id="tag-skill" name="skill-tag" value="skill"> <label for="tag-skill">스킬</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">쪼개기 노트 제출 (+50 XP)</button>
+                    </form>
+                </div>
+                 <div class="card">
+                    <h3>최근 분석 노트</h3>
+                    <ul id="analysis-note-list" class="list-group">
+                        </ul>
+                </div>
+            </div>
+
+            <div id="challenges-module" class="module">
+                <h2>'점진적 과부하' 챌린지</h2>
+                <div class="card">
+                    <ul id="challenge-list" class="list-group">
+                        </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>     
